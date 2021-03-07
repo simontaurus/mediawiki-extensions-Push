@@ -277,7 +277,11 @@ class ApiPushImages extends ApiBase {
 			$localFile = $be->getLocalReference(
 				array( 'src' => $file->getPath() )
 			);
-			$requestData['file'] = '@' . $localFile->getPath();
+			if ( function_exists( 'curl_file_create' ) ) {
+				$requestData['file'] = curl_file_create( $localFile->getPath() );
+			} else {
+				$requestData['file'] = '@' . $localFile->getPath();
+			}
 		}
 		else {
 			$requestData['url'] = $imagePage->getDisplayedFile()->getFullUrl();
